@@ -21,11 +21,11 @@ export const getVehicles = async (req: Request, res: Response): Promise<void> =>
     }
 }
 
-export const getVehicleByID = async (req: Request, res: Response) => {
+export const getVehicleByID = async (req: Request, res: Response): Promise<void> => {
     try {
         const { vehicleID } = req.params
 
-        const vehicle = await axios.get(`${URLAPI}vehicles/${vehicleID}/`)
+        const vehicle = await axios.get<IVehicle>(`${URLAPI}vehicles/${vehicleID}/`)
 
         res.status(200).send(vehicle.data)
     } catch (error) {
