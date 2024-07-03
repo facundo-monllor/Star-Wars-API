@@ -5,7 +5,10 @@ import axios from 'axios';
 // Util Imports
 import { URLAPI } from '../utils/endpoints';
 
-export const getPeople = async (req: Request, res: Response) => {
+// Interface Imports
+import { IPeople } from '../interfaces';
+
+export const getPeople = async (req: Request, res: Response): Promise<void> => {
     try {
         const { page, search } = req.query
         const pageNumber = Number(page) || 1;
@@ -16,17 +19,18 @@ export const getPeople = async (req: Request, res: Response) => {
 
         const response = await axios.get(url);
 
-        res.status(200).send(response.data.results)
+        const people: IPeople[] = response.data.results;
+        res.status(200).send(people)
     } catch (error) {
         res.status(404).send(error);
     }
 }
 
-export const getCharacterByID = async (req: Request, res: Response) => {
+export const getCharacterByID = async (req: Request, res: Response): Promise<void> => {
     try {
         const { characterID } = req.params
 
-        const character = await axios.get(`${URLAPI}people/${characterID}`)
+        const character = await axios.get<IPeople>(`${URLAPI}people/${characterID}`)
 
         res.status(200).send(character.data)
     } catch (error) {
